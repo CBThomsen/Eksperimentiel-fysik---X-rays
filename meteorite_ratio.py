@@ -66,11 +66,11 @@ def gaussFitPlot(fileName, region, par_limits):
 
 int_ratio = []
 
-region_fe = [390,430]
+region_fe = [395,465]
 #par_limits = ([1000,6,0],[1200,6.5,0.4])
 #popt_fe = gaussFitPlot('180403_data/50_50_task2_cal_602.mca', region, par_limits)
 
-region_ni = [460,500]
+region_ni = [465,500]
 #par_limits = ([170,7.2,0],[200,7.6,0.4])
 #popt_ni = gaussFitPlot('180403_data/50_50_task2_cal_602.mca', region, par_limits)
 
@@ -78,11 +78,11 @@ counts_50_50_fe = np.trapz(counts_50_50[region_fe[0]:region_fe[1]])
 counts_50_50_ni = np.trapz(counts_50_50[region_ni[0]:region_ni[1]])
 int_ratio.append(counts_50_50_ni / counts_50_50_fe)
 
-region_fe = [390,430]
+region_fe = [395,465]
 #par_limits = ([1200,6,0],[1500,6.5,0.4])
 #popt_fe = gaussFitPlot('180403_data/36_64_task2_cal_600.mca', region, par_limits)
 
-region_ni = [460,500]
+region_ni = [465,500]
 #par_limits = ([120,7.2,0],[200,7.6,0.4])
 #popt_ni = gaussFitPlot('180403_data/36_64_task2_cal_600.mca', region, par_limits)
 
@@ -95,27 +95,27 @@ print('Intensity ratios for known matter ratios I_Ni/I_Fe:')
 print(int_ratio)
 print('---------------------------------')
 
-matter_ratio = [50/50, 34/36]
+matter_ratio = [50/50, 36/64]
 
 def linFunc(x, a, b):
     return a*x+b
 
-popt_lin, pcov = curve_fit(linFunc, int_ratio, matter_ratio)
+popt_lin, pcov = curve_fit(linFunc, matter_ratio, int_ratio)
 print('Fitting parameters a and b')
 print(popt_lin)
 print('------------------------------')
 
 plt.figure()
-plt.plot(int_ratio, matter_ratio, 'r*')
-plt.plot(np.linspace(0,0.4,100), linFunc(np.linspace(0,0.4,100),*popt_lin))
+plt.plot(matter_ratio, int_ratio, 'r*')
+plt.plot(np.arange(0, 1, 0.001), linFunc(np.arange(0, 1, 0.001),*popt_lin))
 plt.xlabel(r'$\frac{I_{Ni}}{I_{Fe}}$')
 plt.ylabel(r'$\frac{N_{Ni}}{N_{Fe}}$')
 
 print('------------------------------')
 print('Matter ratio for Black Rock:')
 channels_blackrock, counts_blackrock = loadData('180403_data/blackrock_task2_600.mca')
-region_fe = [390,430]
-region_ni = [465,500]
+region_fe = [400,470]
+region_ni = [470,490]
 
 counts_blackrock_fe = np.trapz(counts_blackrock[region_fe[0]:region_fe[1]])
 counts_blackrock_ni = np.trapz(counts_blackrock[region_ni[0]:region_ni[1]])
@@ -124,20 +124,10 @@ int_ratio = counts_blackrock_ni/counts_blackrock_fe
 matter_ratio = popt_lin[0]*int_ratio+popt_lin[1]
 print(matter_ratio)
 
-# plt.figure()
-# plt.plot(channels_blackrock[390:430],counts_blackrock[390:430])
-# plt.title('Fe part')
-# plt.figure()
-# plt.plot(channels_blackrock[465:500],counts_blackrock[465:500])
-# plt.title('Ni part')
-# plt.show()
-
 
 print('------------------------------')
 print('Matter ratio for Shiny Rock')
 channels_shiny, counts_shiny = loadData('180403_data/shiny_task2_600.mca')
-region_fe = [390,430]
-region_ni = [465,500]
 
 counts_shiny_fe = np.trapz(counts_shiny[region_fe[0]:region_fe[1]])
 counts_shiny_ni = np.trapz(counts_shiny[region_ni[0]:region_ni[1]])
@@ -149,8 +139,6 @@ print(matter_ratio)
 print('------------------------------')
 print('Matter ratio for Smykkeskrin Rock')
 channels_smykkeskrin, counts_smykkeskrin = loadData('180403_data/smykkeskrin_task2_600.mca')
-region_fe = [390,430]
-region_ni = [465,500]
 
 counts_smykkeskrin_fe = np.trapz(counts_smykkeskrin[region_fe[0]:region_fe[1]])
 counts_smykkeskrin_ni = np.trapz(counts_smykkeskrin[region_ni[0]:region_ni[1]])
@@ -158,6 +146,3 @@ counts_smykkeskrin_ni = np.trapz(counts_smykkeskrin[region_ni[0]:region_ni[1]])
 int_ratio = counts_smykkeskrin_ni/counts_smykkeskrin_fe
 matter_ratio = popt_lin[0]*int_ratio+popt_lin[1]
 print(matter_ratio)
-
-
-plt.show()
