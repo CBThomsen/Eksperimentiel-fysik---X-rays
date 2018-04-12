@@ -4,7 +4,7 @@ from scipy.optimize import curve_fit
 
 plt.close('all')
 
-def plotatt(fileName, background, exp1, exp2, tyk, gaet):
+def plotatt(fileName, background, ratio):
     def loadData(fileName):
     
         with open(fileName) as text:
@@ -27,32 +27,27 @@ def plotatt(fileName, background, exp1, exp2, tyk, gaet):
     channelsabs = np.array(channelsabs)
     countsabs = np.array(countsabs)
 
-    dt = tyk
     
     attenuation = np.array([])
     energy = np.array([])
 
-    for i in channels:
-        if countsabs[i] > 0 and counts[i] > 0:
-            attenuation = np.append(attenuation, -np.log(countsabs[i]/(counts[i]*exp1/exp2))*1/dt)
-            energy = np.append(energy, 0.01564856*channels[i]-0.07337194)
-
-    rhoguess = gaet
-    attguess = attenuation / rhoguess
-    meverg = energy / 1000
+    diff_count = counts*ratio-countsabs
+    energy = np.append(energy, 0.01564856*channels-0.07337194)
+    # i keV
 
     plt.figure()
-    plt.plot(meverg, attguess, '-')
-    plt.xlabel('Energy [MeV]')
-    plt.ylabel('Attenuation coefficient [cm^2/g]')
-    plt.yscale('log')
-    plt.xscale('log')
-#    plt.xlim([0.008, 0.029])
+    plt.plot(energy, diff_count, '-')
+    plt.xlabel('Energy [keV]')
+    plt.ylabel('dI')
+#    plt.yscale('log')
+#    plt.xscale('log')
+    plt.xlim([9, 40])
+    plt.ylim([-10,60])
     plt.grid()
     plt.show()
 
-plotatt('180403_data/abs1_600.mca', '180403_data/baggrund_600.mca', 600, 600, 0.0030, 11.34)
-plotatt('180403_data/abs2_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0033, 10.49)
-plotatt('180403_data/abs3_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0025, 19.3)
+plotatt('180403_data/abs1_600.mca', '180403_data/baggrund_600.mca',1)
+plotatt('180403_data/abs2_900.mca', '180403_data/baggrund_600_2.mca',1.5)
+plotatt('180403_data/abs3_900.mca', '180403_data/baggrund_600_2.mca',1.5)
 
     
