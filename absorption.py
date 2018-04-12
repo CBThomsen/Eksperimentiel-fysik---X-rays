@@ -1,10 +1,11 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
+from scipy import interpolate
 
 plt.close('all')
 
-def plotatt(fileName, background, exp1, exp2, tyk, gaet):
+def plotatt(fileName, background, exp1, exp2, tyk, gaet, slope):
     def loadData(fileName):
     
         with open(fileName) as text:
@@ -40,9 +41,25 @@ def plotatt(fileName, background, exp1, exp2, tyk, gaet):
     rhoguess = gaet
     attguess = attenuation / rhoguess
     meverg = energy / 1000
+    
+    att = np.array([])
+    mev = np.array([])
+    
+    for i in range(len(meverg)):
+        if meverg[i] > 0.008 and meverg[i] < 0.030:
+            att = np.append(att, attguess[i])
+            mev = np.append(mev, meverg[i])
+    
+    
+#    spline = interpolate.interp1d(meverg, attguess, kind='cubic')
+    x = np.linspace(mev[0], mev[len(mev)-1], 100000)
+
+    tck = interpolate.splrep(mev, att, s=slope*len(mev))
+    spline = interpolate.splev(x, tck)
 
     plt.figure()
-    plt.plot(meverg, attguess, '-')
+    plt.plot(mev, att, 'k.')
+    plt.plot(x, spline, 'r-')
     plt.xlabel('Energy [MeV]')
     plt.ylabel('Attenuation coefficient [cm^2/g]')
     plt.yscale('log')
@@ -51,8 +68,8 @@ def plotatt(fileName, background, exp1, exp2, tyk, gaet):
     plt.grid()
     plt.show()
 
-plotatt('180403_data/abs1_600.mca', '180403_data/baggrund_600.mca', 600, 600, 0.0030, 11.34)
-plotatt('180403_data/abs2_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0033, 10.49)
-plotatt('180403_data/abs3_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0025, 19.3)
+plotatt('180403_data/abs1_600.mca', '180403_data/baggrund_600.mca', 600, 600, 0.0030, 11.34, 190)
+plotatt('180403_data/abs2_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0033, 10.49, 90)
+plotatt('180403_data/abs3_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0025, 19.3, 90)
 
     
