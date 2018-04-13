@@ -37,7 +37,7 @@ def gaussFit(fileName, region, par_limits):
     channels = np.array(channels[region[0]:region[1]])
     counts = np.array(counts[region[0]:region[1]])
 
-    popt, pcov = curve_fit(Gaussfunc, channels, counts, bounds = par_limits)
+    popt, pcov = curve_fit(gaussFunc, channels, counts, bounds = par_limits)
     
     plt.figure()
     plt.plot(channels,counts)
@@ -90,6 +90,11 @@ energies.append(32)
 std_error.append(np.sqrt(np.diag(pcov)[1]))
 
 plt.figure()
+ch, counts = loadData('180320_data/kali_am_600.mca')
+plt.plot(ch, counts)
+plt.show()
+
+plt.figure()
 plt.errorbar(peak_channels,energies, xerr=np.array(std_error), yerr=0, fmt='r*')
 
 # lineært fit
@@ -100,17 +105,21 @@ popt, pcov = curve_fit(linFunc, peak_channels, energies)
 
 channels = np.linspace(1,4000,1000)
 plt.plot(channels,linFunc(channels,popt[0],popt[1]))
+plt.title('Energy calibration')
+plt.xlabel('Channel')
+plt.ylabel('Energy [keV]')
+plt.savefig('energy_cal_fit.eps')
 print(popt)
 print(np.sqrt(np.diag(pcov)))
 
 # Resultat E = 0.01564856*ch -0.07337194
 
 
+plt.show()
 
 
 
-
-
+    
 
 
 
