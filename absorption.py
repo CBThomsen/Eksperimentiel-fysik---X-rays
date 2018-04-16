@@ -57,10 +57,6 @@ def plotatt(fileName, background, exp1, exp2, tyk, gaet, slope, edge):
             satt = np.append(satt, sigmaattguess[i])
             mev = np.append(mev, meverg[i])
     
-    print('Zero errors: ', np.where(satt == 0))
-    print(len(satt))
-    print(len(att))
-    
     
 #    spline = interpolate.interp1d(meverg, attguess, kind='cubic')
     x = np.linspace(mev[0], mev[len(mev)-1], 100000)
@@ -74,6 +70,7 @@ def plotatt(fileName, background, exp1, exp2, tyk, gaet, slope, edge):
     plt.show()
     plt.xlabel('Energy [MeV]')
     plt.ylabel('Attenuation coefficient [cm^2/g]')
+    plt.title('Attenuation of sample ' + fileName[15])
     plt.yscale('log')
     plt.xscale('log')
     plt.plot(x, spline, 'r-', label='Fit', zorder=3)
@@ -84,8 +81,17 @@ def plotatt(fileName, background, exp1, exp2, tyk, gaet, slope, edge):
     plt.savefig('figurer/' + fileName[12:20] + '.pdf')
     plt.show()
 
-plotatt('180403_data/abs1_600.mca', '180403_data/baggrund_600.mca', 600, 600, 0.0030, 11.34, 190, 0.01995)
-plotatt('180403_data/abs2_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0033, 10.49, 90, 0.02555)
-plotatt('180403_data/abs3_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0025, 19.3, 80, 0.01195)
+en1 = 0.01997 #MeV
+sen1= 0.02001-en1
+en2 = 0.02555 #MeV
+sen2= 0.02559-en2
+en3 = 0.01195 #MeV
+sen3= 0.01203-en3
 
-    
+plotatt('180403_data/abs1_600.mca', '180403_data/baggrund_600.mca', 600, 600, 0.0030, 11.34, 190, en1)
+plotatt('180403_data/abs2_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0033, 10.49, 90, en2)
+plotatt('180403_data/abs3_900.mca', '180403_data/baggrund_600_2.mca', 900, 600, 0.0025, 19.3, 80, en3)
+
+print('K1_1: ' + str(en1 * 1000) + '+/-' + str(sen1 * 1000) + ' keV')
+print('K1_2: ' + str(en2 * 1000) + '+/-' + str(sen2 * 1000) + ' keV')
+print('K1_3: ' + str(en3 * 1000) + '+/-' + str(sen3 * 1000) + ' keV')
