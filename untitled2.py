@@ -2,7 +2,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 
-with open('180320_data/kali_am_600.mca') as text:
+with open('180410_data/glimmer_1800.mca') as text:
     
     counts = []
     lister = text.readlines()
@@ -11,7 +11,6 @@ with open('180320_data/kali_am_600.mca') as text:
     data = lister[begin:end]
     for i in data:
         counts.append(float(i))
-    print(counts) 
     channels = range(0,len(counts))
 
 plt.plot(channels,counts)
