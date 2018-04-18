@@ -76,10 +76,22 @@ std_error.append(np.sqrt(np.diag(pcov)[1]))
 # Det samme for Fe-55
 par_limits = ([17,350,2],[23,400,20])
 region = [350,400]
-channels, counts, popt, pcov = gaussFit('180320_data/kali_fe_900.mca', region, par_limits)
+channels_fe, counts_fe, popt, pcov = gaussFit('180320_data/kali_fe_900.mca', region, par_limits)
 peak_channels.append(popt[1])
 energies.append(5.9)
 std_error.append(np.sqrt(np.diag(pcov)[1]))
+
+plt.figure()
+ch, counts = loadData('180320_data/kali_fe_900.mca')
+ch = ch[0:600]
+counts = counts[0:600]
+plt.plot(ch, counts, label='Raw data')
+plt.plot(ch,gaussFunc(ch,popt[0],popt[1],popt[2]),'r-', label='Gauss fit')
+plt.legend()
+plt.title('Spectrum of Fe-55')
+plt.xlabel('Channel')
+plt.ylabel('Energy [keV]')
+plt.savefig('figurer/Fe-55_spectrum.eps')
 
 #  Det samme for Cs-137
 par_limits = ([5,1950,5],[17,2150,50])
@@ -89,10 +101,6 @@ peak_channels.append(popt[1])
 energies.append(32)
 std_error.append(np.sqrt(np.diag(pcov)[1]))
 
-plt.figure()
-ch, counts = loadData('180320_data/kali_am_600.mca')
-plt.plot(ch, counts)
-plt.show()
 
 plt.figure()
 plt.errorbar(peak_channels,energies, xerr=np.array(std_error), yerr=0, fmt='r*')
